@@ -49,3 +49,19 @@ func isRepo(dir string) bool {
 	}
 	return false
 }
+
+// Starting from a string directory, recurse to find all directories
+// containing .git directories (i.e., find all git repos)
+func traverseAndDo(dir string) []string {
+	files, _ := ioutil.ReadDir(dir)
+	var subdirs []string
+	for _, file := range files {
+		if file.IsDir && !isRepo(file) {
+			append(subdirs, file.Name())
+		}
+	}
+
+	for _, subdir := range subdirs {
+		traverse(subdir)
+	}
+}
